@@ -19,7 +19,8 @@
     const sel = document.getElementById('riwayahSelect');
     util.clear(sel);
     data.riwayahList().forEach(ri => {
-      const o = util.el('option', { value: ri }, data.riwayahLabel(ri));
+      const short = data.riwayahLabel(ri).split(' ')[0];   // "Ḥafṣ" / "Warsh" — compact for the bar
+      const o = util.el('option', { value: ri }, short);
       if (ri === store.settings.riwayah) o.selected = true;
       sel.append(o);
     });
