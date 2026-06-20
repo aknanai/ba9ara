@@ -26,6 +26,16 @@
       const gapVal = el('span', { class: 'muted' }, (s.gapMs / 1000).toFixed(1) + 's');
       gap.addEventListener('input', () => gapVal.textContent = (gap.value / 1000).toFixed(1) + 's');
 
+      // playback speed (applies to looping and full-surah playback alike)
+      const speedBtns = el('div', { class: 'seg' });
+      function renderSpeed() {
+        clear(speedBtns);
+        [0.5, 0.75, 1, 1.25, 1.5].forEach(r => speedBtns.append(
+          el('button', { class: 'seg-btn' + (Math.abs((s.speed || 1) - r) < 0.001 ? ' on' : ''), type: 'button',
+            onclick: () => { s.speed = r; store.setSetting('speed', r); audio.setRate(r); renderSpeed(); } }, r + '×')));
+      }
+      renderSpeed();
+
       const capNote = el('div', { class: 'muted', style: 'font-size:.82rem' });
       const playBtn = el('button', { class: 'btn', onclick: play }, '▶ Play loop');
 
@@ -34,7 +44,8 @@
         el('div', { class: 'grid2' },
           field('Reciter', recSel),
           fromI.wrap, toI.wrap, repsI.wrap, rangeI.wrap,
-          field('Gap between repeats', el('div', { class: 'row' }, gap, gapVal))),
+          field('Gap between repeats', el('div', { class: 'row' }, gap, gapVal)),
+          field('Speed', speedBtns)),
         el('div', { class: 'row', style: 'margin-top:.6rem' }, playBtn,
           el('button', { class: 'btn ghost', onclick: () => { audio.stop(); } }, '■ Stop')),
         capNote);
@@ -92,7 +103,7 @@
     return el('div', { class: 'field' }, el('label', {}, label), control);
   }
   function numField(label, val, min = 1, max = 286) {
-    const input = el('input', { type: 'number', min, max, value: val });
-    return { input, wrap: field(label, input) };
+    const s = BA.util.stepper(val, min, max);
+    return { input: s.input, wrap: field(label, s.wrap) };
   }
 })(window.BA = window.BA || {});

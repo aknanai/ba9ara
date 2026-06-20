@@ -20,6 +20,21 @@
       return e;
     },
     clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; },
+    // touch-friendly number input flanked by − / + buttons. Returns {input, wrap}.
+    stepper(value, min, max, step = 1) {
+      const input = U.el('input', { type: 'number', min, max, step, value, inputmode: 'numeric' });
+      const bump = d => {
+        const v = U.clamp((parseInt(input.value, 10) || min) + d, min, max);
+        input.value = v; input.dispatchEvent(new Event('change', { bubbles: true }));
+      };
+      const btn = (sym, d) => U.el('button', { class: 'step-btn', type: 'button', 'aria-label': d < 0 ? 'decrease' : 'increase', onclick: () => bump(d) }, sym);
+      input.addEventListener('change', () => {           // clamp manual typing too
+        const v = U.clamp(parseInt(input.value, 10) || min, min, max);
+        if (String(v) !== input.value) input.value = v;
+      });
+      const wrap = U.el('div', { class: 'stepper-row' }, btn('−', -step), input, btn('+', step));
+      return { input, wrap };
+    },
     toast(msg, ms = 1900) {
       const t = document.getElementById('toast');
       t.textContent = msg; t.hidden = false;

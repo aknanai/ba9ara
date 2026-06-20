@@ -27,6 +27,13 @@
       const gapV = el('span', { class: 'muted' }, (s.gapMs / 1000).toFixed(1) + 's');
       gap.addEventListener('input', () => { gapV.textContent = (gap.value / 1000).toFixed(1) + 's'; store.setSetting('gapMs', +gap.value); });
 
+      // playback speed
+      const speedBtns = el('div', { class: 'seg' });
+      const renderSpeed = () => { clear(speedBtns); [0.5, 0.75, 1, 1.25, 1.5].forEach(r => speedBtns.append(
+        el('button', { class: 'seg-btn' + (Math.abs((s.speed || 1) - r) < 0.001 ? ' on' : ''), type: 'button',
+          onclick: () => { s.speed = r; store.setSetting('speed', r); BA.audio.setRate(r); renderSpeed(); } }, r + '×'))); };
+      renderSpeed();
+
       // theme + font
       const themeBtns = el('div', { class: 'row' },
         themeBtn('light', '☀️ Light'), themeBtn('dark', '🌙 Dark'));
@@ -48,7 +55,7 @@
           field('Default reciter', recSel)),
         el('div', { class: 'card' }, el('h3', {}, 'Loop defaults'),
           el('div', { class: 'grid2' }, field('Repeat each ayah', reps), field('Loop the range', rng),
-            field('Gap between repeats', el('div', { class: 'row' }, gap, gapV)))),
+            field('Gap between repeats', el('div', { class: 'row' }, gap, gapV)), field('Speed', speedBtns))),
         el('div', { class: 'card' }, el('h3', {}, 'Appearance'),
           field('Theme', themeBtns), field('Arabic font', fontSel)),
         el('div', { class: 'card' }, el('h3', {}, 'Offline'),
@@ -97,9 +104,9 @@
 
   function field(label, control) { return el('div', { class: 'field' }, el('label', {}, label), control); }
   function num(val, min, max, on) {
-    const i = el('input', { type: 'number', min, max, value: val });
-    i.addEventListener('change', () => on(clamp(+i.value || min, min, max)));
-    return i;
+    const s = BA.util.stepper(val, min, max);
+    s.input.addEventListener('change', () => on(clamp(+s.input.value || min, min, max)));
+    return s.wrap;
   }
   BA.settings = { applyFont };
 })(window.BA = window.BA || {});

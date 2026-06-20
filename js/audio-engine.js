@@ -12,6 +12,7 @@
   let audio, prefetch;
   let reciter = null, riwayah = 'hafs';
   let playlist = [], idx = -1, gapMs = 800, state = 'stopped', gapTimer = null, retried = false;
+  let rate = 1;
 
   function setState(s) { state = s; emit('statechange', s); }
 
@@ -69,6 +70,7 @@
     if (!item) return finish();
     retried = false;
     audio.src = item.url;
+    audio.playbackRate = rate;
     const p = audio.play();
     if (p && p.catch) p.catch(() => {/* autoplay block: wait for user gesture */ setState('paused'); });
     emit('ayahstart', item.ayah, item);
@@ -101,11 +103,13 @@
   function toggle() { (state === 'playing' || state === 'gap') ? pause() : resume(); }
   function stop() { clearTimeout(gapTimer); if (audio) { audio.pause(); } playlist = []; idx = -1; setState('stopped'); }
 
+  function setRate(r) { rate = r; if (audio) audio.playbackRate = r; }
+  function getRate() { return rate; }
   function current() { return playlist[idx] || null; }
   function getState() { return state; }
   function getReciter() { return reciter; }
   function getRiwayah() { return riwayah; }
 
   BA.audio = { init, configure, playRange, playSingle, pause, resume, toggle, stop,
-               on, current, getState, getReciter, getRiwayah };
+               setRate, getRate, on, current, getState, getReciter, getRiwayah };
 })(window.BA = window.BA || {});

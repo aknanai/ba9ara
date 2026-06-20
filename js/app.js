@@ -85,6 +85,7 @@
     }
     fillRiwayahSelect();
     reconfigure();
+    audio.setRate(store.settings.speed || 1);
     refreshStreak();
     if (BA.settings) BA.settings.applyFont(store.settings.font || 'scheherazade');
     nav.buildSidebar();

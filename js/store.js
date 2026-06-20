@@ -5,7 +5,7 @@
     version: 1,
     settings: {
       riwayah: 'hafs', reciter: 'husary_muallim',
-      repsPerAyah: 3, rangeReps: 2, gapMs: 800,
+      repsPerAyah: 3, rangeReps: 2, gapMs: 800, speed: 1,
       theme: 'light', hideLevel: 0, font: 'scheherazade',
     },
     progress: {},                         // "2:3": {status, reviews, lastSeen}

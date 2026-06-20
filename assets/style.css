@@ -114,6 +114,24 @@ h1.page-title{font-size:1.5rem;margin:.2rem 0 1rem;}
 .field input[type=number],.field select{padding:.45rem .55rem;border:1px solid var(--border);
   border-radius:var(--radius-sm);background:var(--surface);color:var(--text);}
 input[type=range]{accent-color:var(--accent);}
+/* touch-friendly number stepper (−  input  +) */
+.stepper-row{display:flex;align-items:stretch;gap:.35rem;}
+.stepper-row input[type=number]{flex:1;min-width:0;text-align:center;-moz-appearance:textfield;}
+.stepper-row input[type=number]::-webkit-outer-spin-button,
+.stepper-row input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.step-btn{flex:0 0 auto;width:2.6rem;border:1px solid var(--border);background:var(--surface);
+  color:var(--accent);border-radius:var(--radius-sm);font-size:1.35rem;font-weight:700;line-height:1;
+  cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:center;touch-action:manipulation;}
+.step-btn:hover{background:var(--emerald-soft);}
+.step-btn:active{background:var(--emerald-soft);transform:scale(.94);}
+/* segmented control (speed) */
+.seg{display:flex;gap:.3rem;flex-wrap:wrap;}
+.seg-btn{padding:.42rem .6rem;border:1px solid var(--border);background:var(--surface);color:var(--text);
+  border-radius:var(--radius-sm);cursor:pointer;font-size:.85rem;font-weight:600;touch-action:manipulation;}
+.seg-btn:hover{background:var(--emerald-soft);}
+.seg-btn.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+[data-theme="dark"] .seg-btn.on{color:#0c1a14;}
+.seg-btn:active{transform:scale(.95);}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.7rem;}
 
 /* ---------- Arabic / ayah text ---------- */
