@@ -1,8 +1,10 @@
 /* sw.js — offline app shell + serve any audio the user downloaded for offline. */
-const SHELL = 'ba9ara-shell-v3';
+const SHELL = 'ba9ara-shell-v4';
 const AUDIO = 'ba9ara-audio-v1';
 const SHELL_FILES = [
   './', './index.html', './manifest.webmanifest',
+  './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png',
+  './assets/icon-maskable-512.png', './assets/apple-touch-icon.png',
   './assets/style.css', './assets/nav.js',
   './assets/fonts/scheherazade-400.woff2', './assets/fonts/scheherazade-700.woff2', './assets/fonts/amiri-quran.woff2',
   './js/util.js', './js/store.js', './js/data.js', './js/reciters.js', './js/audio-engine.js', './js/reveal.js', './js/app.js',

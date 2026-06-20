@@ -50,6 +50,7 @@
 
       sec.append(
         el('h1', { class: 'page-title' }, 'Settings'),
+        installCard(),
         el('div', { class: 'card' }, el('h3', {}, 'Reading & audio'),
           field('Reading (riwāyah)', riSel),
           field('Default reciter', recSel)),
@@ -71,6 +72,25 @@
       }
     },
   };
+
+  function installCard() {
+    if (BA.app.isStandalone()) {
+      return el('div', { class: 'card' }, el('h3', {}, '📲 Installed'),
+        el('div', { class: 'muted', style: 'font-size:.85rem' }, 'You’re running the installed app. Download a reciter below to use it fully offline.'));
+    }
+    const body = el('div', { class: 'muted', style: 'font-size:.85rem' });
+    const card = el('div', { class: 'card' }, el('h3', {}, '📲 Install app'), body);
+    if (BA.app.canInstall()) {
+      body.append('Add Al-Baqarah to your home screen for full-screen, app-like use that works offline.',
+        el('div', { class: 'row', style: 'margin-top:.55rem' },
+          el('button', { class: 'btn', onclick: () => BA.app.promptInstall() }, '⬇ Install app')));
+    } else if (BA.app.isIOS()) {
+      body.append(el('div', { html: 'On iPhone/iPad: open in <b>Safari</b>, tap the <b>Share</b> button (⬆️ box-with-arrow), then choose <b>“Add to Home Screen”</b>.' }));
+    } else {
+      body.append(el('div', { html: 'Use your browser menu → <b>Install app</b> / <b>Add to Home Screen</b> (works in Chrome, Edge, Safari, Samsung Internet).' }));
+    }
+    return card;
+  }
 
   function applyFont(font) {
     document.documentElement.style.setProperty('--ar-font', font === 'amiri' ? "'Amiri Quran'" : "'Scheherazade New'");

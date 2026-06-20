@@ -3,6 +3,9 @@
   const { store, data, audio, nav, util } = BA;
   let curAyah = 1;
   let highlighter = null;   // the active view's "an ayah started playing" hook
+  let deferredPrompt = null; // captured Android/Chrome install prompt
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
+  window.addEventListener('appinstalled', () => { deferredPrompt = null; util.toast && util.toast('App installed ✓'); });
 
   function setTheme(t) {
     document.documentElement.dataset.theme = t;
@@ -70,6 +73,16 @@
     onAyah(fn) { highlighter = fn; },     // view registers a highlight hook (replaces previous)
     clearAyah() { highlighter = null; },
     get curAyah() { return curAyah; },
+    canInstall() { return !!deferredPrompt; },
+    async promptInstall() {
+      if (!deferredPrompt) return false;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      return outcome === 'accepted';
+    },
+    isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream; },
+    isStandalone() { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; },
   };
 
   async function boot() {
