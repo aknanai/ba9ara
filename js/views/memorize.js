@@ -10,6 +10,14 @@
       let level = store.settings.hideLevel || 0;
       clear(sec);
 
+      // whole-surah reciters (Qazābrī/Kūshī) have no per-ayah file, so "Loop this ayah"
+      // can't isolate one ayah → fall back to a per-ayah voice of the same reading.
+      const shortName = r => (r && r.name_en ? r.name_en.split(' (')[0] : '');
+      const curRec = data.reciter(store.settings.reciter);
+      const isFull = !!(curRec && curRec.capability === 'full-surah');
+      const paRec = isFull ? data.defaultReciter(ri) : null;
+      const canFallback = !!(isFull && paRec && paRec.capability === 'per-ayah');
+
       const heading = el('strong', {}, '');
       const jump = el('input', { type: 'number', min: 1, max: data.count, value: n, style: 'width:5.5em' });
       jump.addEventListener('change', () => go(clamp(+jump.value || 1, 1, data.count)));
@@ -72,7 +80,11 @@
         else if (e.key === 'Escape') { searchInput.value = ''; runSearch(); }
       });
 
-      sec.append(searchCard, nav, card, trBox, actions);
+      const fallbackNote = canFallback
+        ? el('div', { class: 'muted', style: 'font-size:.82rem;margin:-.3rem 0 1rem' },
+            `🔁 “${shortName(curRec)}” is a whole-surah recording — single-ayah loop uses “${shortName(paRec)}” (per-ayah) for now.`)
+        : null;
+      sec.append(searchCard, nav, card, trBox, actions, fallbackNote || el('span'));
 
       function render() {
         levelLabel.textContent = reveal.LEVELS[level];
@@ -91,9 +103,11 @@
       }
       function go(to) { n = clamp(to, 1, data.count); store.setLast({ ayah: n }); render(); }
       function loopAyah() {
-        store.setSetting('reciter', store.settings.reciter); BA.app.reconfigure();
+        const rec = canFallback ? paRec : (curRec || data.defaultReciter(ri));
+        audio.configure({ reciterId: rec.id, riwayah: ri });
         audio.playSingle(n, { reps: store.settings.repsPerAyah, gapMs: store.settings.gapMs });
         card.classList.add('playing');
+        if (canFallback) BA.util.toast(`Looping with ${shortName(paRec)} — ${shortName(curRec)} is whole-surah`);
       }
       function gotIt() {
         const st = store.bump('2:' + n, +1); BA.app.refreshStreak(); render();

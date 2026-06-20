@@ -1,5 +1,5 @@
 /* sw.js — offline app shell + serve any audio the user downloaded for offline. */
-const SHELL = 'ba9ara-shell-v5';
+const SHELL = 'ba9ara-shell-v6';
 const AUDIO = 'ba9ara-audio-v1';
 const SHELL_FILES = [
   './', './index.html', './manifest.webmanifest',
