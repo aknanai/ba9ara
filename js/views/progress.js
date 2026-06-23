@@ -28,6 +28,14 @@
           mini(`${c.mastered}`, 'Mastered'),
           mini(`${c.solid}`, 'Solid')),
 
+        store.dueCount()
+          ? el('div', { class: 'card' },
+              el('div', { class: 'row spread' },
+                el('div', {}, el('strong', {}, `🎯 ${store.dueCount()} due for review`),
+                  el('div', { class: 'muted', style: 'font-size:.85rem' }, 'Spaced-repetition queue')),
+                el('button', { class: 'btn', onclick: () => nav.go('review') }, 'Start')))
+          : el('span'),
+
         el('div', { class: 'card' },
           el('div', { class: 'row spread' }, el('h3', { style: 'margin:0' }, 'All 286 ayāt'),
             el('span', { class: 'muted', style: 'font-size:.8rem' }, 'tap a cell to study it')),

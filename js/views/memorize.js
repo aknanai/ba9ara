@@ -110,11 +110,11 @@
         if (canFallback) BA.util.toast(`Looping with ${shortName(paRec)} — ${shortName(curRec)} is whole-surah`);
       }
       function gotIt() {
-        const st = store.bump('2:' + n, +1); BA.app.refreshStreak(); render();
-        if (st === 'mastered') BA.util.toast('🎉 Mastered ayah ' + n);
-        else BA.util.toast('Saved · ' + st);
+        const e = store.review('2:' + n, 'good'); BA.app.refreshStreak(); render();
+        if (e && e.status === 'mastered') BA.util.toast('🎉 Mastered ayah ' + n);
+        else BA.util.toast('Saved · ' + (e ? e.status : ''));
       }
-      function missed() { store.markAyah('2:' + n, 'learning'); BA.app.refreshStreak(); render(); }
+      function missed() { store.review('2:' + n, 'again'); BA.app.refreshStreak(); render(); }
 
       BA.app.onAyah((a) => { card.classList.toggle('playing', a === n); });
       render();

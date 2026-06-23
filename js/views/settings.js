@@ -20,6 +20,9 @@
       data.recitersFor(s.riwayah).forEach(r => { const o = el('option', { value: r.id }, r.name_en); if (r.id === s.reciter) o.selected = true; recSel.append(o); });
       if (!data.recitersFor(s.riwayah).some(r => r.id === s.reciter)) recSel.selectedIndex = 0;
 
+      // spaced repetition
+      const dailyNew = num(s.dailyNew, 0, 50, v => store.setSetting('dailyNew', v));
+
       // loop defaults
       const reps = num(s.repsPerAyah, 1, 20, v => store.setSetting('repsPerAyah', v));
       const rng = num(s.rangeReps, 1, 50, v => store.setSetting('rangeReps', v));
@@ -61,6 +64,10 @@
           (s.lang !== 'off' && data.langMeta(s.lang))
             ? el('div', { class: 'muted', style: 'font-size:.8rem;margin-top:.4rem' }, 'Source: ' + data.langMeta(s.lang).source)
             : el('span')),
+        el('div', { class: 'card' }, el('h3', {}, '🎯 Review (spaced repetition)'),
+          el('div', { class: 'muted', style: 'font-size:.84rem;margin-bottom:.5rem' },
+            'The Review tab schedules each ayah on a spacing ladder (1 → 3 → 7 → 16 → 40 days) and surfaces what’s due. This sets how many brand-new ayāt a session introduces per day.'),
+          field('New ayāt per day', dailyNew)),
         el('div', { class: 'card' }, el('h3', {}, 'Loop defaults'),
           el('div', { class: 'grid2' }, field('Repeat each ayah', reps), field('Loop the range', rng),
             field('Gap between repeats', el('div', { class: 'row' }, gap, gapV)), field('Speed', speedBtns))),

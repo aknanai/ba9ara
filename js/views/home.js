@@ -7,10 +7,19 @@
       store.setLast({ view: 'home' });
       clear(sec);
       const pct = store.percent(), c = store.counts(), last = store.last.ayah || 1;
+      const due = store.dueCount(), newRem = store.newRemaining();
 
       sec.append(
         el('h1', { class: 'page-title' }, 'Memorize Surah Al-Baqarah ',
           el('span', { class: 'pill' }, '286 ayāt')),
+
+        el('div', { class: 'card' },
+          el('div', { class: 'row spread' },
+            el('div', {},
+              el('div', { class: 'muted' }, "Today’s review"),
+              el('div', { html: `<strong style="font-size:1.2rem">${due} due</strong>${newRem ? ` · ${newRem} new` : ''}` })),
+            el('button', { class: 'btn', onclick: () => nav.go('review') },
+              (due || newRem) ? '🎯 Start review' : '✅ Caught up'))),
 
         el('div', { class: 'card' },
           el('div', { class: 'bismillah' }, data.bismillah(store.settings.riwayah)),

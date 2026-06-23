@@ -2,6 +2,7 @@
 (function (BA) {
   const VIEWS = [
     { id: 'home',     ic: '🏠', title: 'Home',          group: 'Start' },
+    { id: 'review',   ic: '🎯', title: 'Review',        group: 'Memorize' },
     { id: 'listen',   ic: '🔁', title: 'Listen & Loop', group: 'Memorize' },
     { id: 'memorize', ic: '🙈', title: 'Memorize',      group: 'Memorize' },
     { id: 'test',     ic: '✅', title: 'Test',          group: 'Memorize' },
